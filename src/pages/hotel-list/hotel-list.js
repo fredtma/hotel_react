@@ -1,17 +1,26 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge, Card, ListGroup } from "react-bootstrap";
-import { fetchOk } from "../../services/fetch/fetch.service";
 import { receiveMessage, sendMessage, setupWorker } from "../../services/web-worker/web-worker";
 
 let worker = setupWorker();
 export default function HotelList({ search = "" }) {
   const [items, setItems] = useState([]);
-  const filterItems = useMemo( () => searchItems(items, search), [search, items]);
-  useEffect(() => { getItems().then(setItems.bind(null)); }, []);
+  useEffect(() => searchItems(search, worker), [search]);
+
   useEffect(() => {
-    worker ??= setupWorker();
+    worker = setupWorker();
+    worker.workerIsSet = true;
+    receiveMessage(worker, (e) => {
+      console.log(worker.workerIsSet);
+      const result = e.data;
+      if (result?.size) {
+        setItems(Array.from(result));
+      }
+    });
+    sendMessage({ type: "all:products" }, worker);
     return () => {
-      //worker.terminate();
+      worker.terminate();
+      worker = null;
     };
   }, []);
 
@@ -19,7 +28,7 @@ export default function HotelList({ search = "" }) {
     <Card>
       <Card.Header>Hotel List</Card.Header>
       <ListGroup as="ul">
-        {filterItems.map((item, i) => (
+        {items.map((item, i) => (
           <ListGroup.Item
             key={item.id}
             as="li"
@@ -32,7 +41,7 @@ export default function HotelList({ search = "" }) {
             <Badge bg="primary">Bathrooms {item.bathrooms}</Badge>
           </ListGroup.Item>
         ))}
-        {filterItems.length === 0 && (
+        {items.length === 0 && (
           <ListGroup.Item as="li">No results</ListGroup.Item>
         )}
       </ListGroup>
@@ -40,21 +49,11 @@ export default function HotelList({ search = "" }) {
   );
 }
 
-function getItems() {
-  return fetch("/assets/data/properties.json")
-    .then(fetchOk)
-    .catch((err) => console.error(err));
-}
-
-function searchItems(items, search, w = worker) {
-  sendMessage({ type: "search", body: search }, w);
-  receiveMessage(w, (e) => console.log('Received message', e.data));
-  return items.filter(
-    (item) =>
-      searchValue(item.name, search) || searchValue(item.description, search)
-  );
-}
-
-function searchValue(value, search) {
-  return value.toLowerCase().includes(search.toLowerCase());
+function searchItems(search, w = worker) {
+  if (!w?.workerIsSet) return;
+  if (search) {
+    sendMessage({ type: "search:products", body: search }, w);
+  } else {
+    sendMessage({ type: "all:products" }, w);
+  }
 }
