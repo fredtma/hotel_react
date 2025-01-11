@@ -1,13 +1,14 @@
-import { ListGroup } from "react-bootstrap";
+import { Card, ListGroup } from "react-bootstrap";
 import { fetchOk } from "../../services/fetch/fetch.service";
 import { useEffect, useState } from "react";
 
 export default function HotelList() {
   const [items, setItems] = useState([]);
-  useEffect(() => getItems(setItems).then(setItems.bind(null)), []);
+  useEffect(() => { getItems().then(setItems.bind(null)); }, []);
 
   return (
-    <div>
+    <Card>
+      <Card.Header>Hotel List</Card.Header>
       <ListGroup>
         {items.map((item, i) => (
           <ListGroup.Item key={i}>
@@ -15,7 +16,7 @@ export default function HotelList() {
           </ListGroup.Item>
         ))}
       </ListGroup>
-    </div>
+    </Card>
   );
 
 }
