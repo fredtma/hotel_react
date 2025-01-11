@@ -1,6 +1,7 @@
 ## TODO
 
 - [ ] Add eslint
+- [ ] Add error boundary
 - [ ] IndexedDB
 - [ ] Workers
 - [ ] Add PWA

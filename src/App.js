@@ -1,8 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import ErrorBoundary from './pages/error-boundary/error-boundary';
 import HotelList from './pages/hotel-list/hotel-list';
 import HotelSearchHeader from './pages/hotel-search-header/hotel-search-header';
-import { Container, Row, Col } from 'react-bootstrap';
-import { useState } from 'react';
 
 function App() {
   const [search, setSearch] = useState('');
@@ -16,7 +17,9 @@ function App() {
         <Col xs={12} md={10}>
           <h2>Hotel Listing</h2>
           <HotelSearchHeader onSearch={setSearch} />
-          <HotelList search={search} />
+          <ErrorBoundary>
+            <HotelList search={search} />
+          </ErrorBoundary>
         </Col>
       </Row>
     </Container>
