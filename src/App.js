@@ -1,26 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import HotelList from './pages/hotel-list/hotel-list';
+import { Container, Row, Col } from 'react-bootstrap';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <HotelList />
-    </div>
+    <Container>
+      <Row>
+        <Col xs={6} md={2}>
+          <h2>Sidebar</h2>
+          <p>Some sidebar content here.</p>
+        </Col>
+        <Col xs={12} md={10}>
+          <h1>Hotel Listing</h1>
+          <HotelList />
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
