@@ -1,16 +1,19 @@
+import { useEffect, useMemo, useState } from "react";
 import { Badge, Card, ListGroup } from "react-bootstrap";
 import { fetchOk } from "../../services/fetch/fetch.service";
-import { useEffect, useMemo, useState } from "react";
+import { receiveMessage, sendMessage, setupWorker } from "../../services/web-worker/web-worker";
 
+let worker = setupWorker();
 export default function HotelList({ search = "" }) {
   const [items, setItems] = useState([]);
+  const filterItems = useMemo( () => searchItems(items, search), [search, items]);
+  useEffect(() => { getItems().then(setItems.bind(null)); }, []);
   useEffect(() => {
-    getItems().then(setItems.bind(null));
+    worker ??= setupWorker();
+    return () => {
+      //worker.terminate();
+    };
   }, []);
-  const filterItems = useMemo(
-    () => searchItems(items, search),
-    [search, items]
-  );
 
   return (
     <Card>
@@ -43,7 +46,9 @@ function getItems() {
     .catch((err) => console.error(err));
 }
 
-function searchItems(items, search) {
+function searchItems(items, search, w = worker) {
+  sendMessage({ type: "search", body: search }, w);
+  receiveMessage(w, (e) => console.log('Received message', e.data));
   return items.filter(
     (item) =>
       searchValue(item.name, search) || searchValue(item.description, search)
