@@ -10,14 +10,25 @@ export default class ErrorBoundary extends Component {
     this.state = { hasError: false };
   }
 
+  /**
+   * @param {Error} error
+   * @returns {hasError: boolean, error: Error}
+   */
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
   }
 
+  /**
+   * @param {Error} error
+   * @param {ErrorInfo} errorInfo
+   */
   componentDidCatch(error, errorInfo) {
     console.error(error, errorInfo);
   }
 
+  /**
+   * @returns {JSX.Element}
+   */
   render() {
     const { hasError, error } = this.state;
     if (hasError) {

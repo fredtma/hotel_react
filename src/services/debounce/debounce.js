@@ -1,3 +1,7 @@
+/**
+ * @template T
+ * @type {((func: T, timeout?: number) => T)}
+ */
 export function debounce(func, timeout = 300) {
   let timer;
   return (...args) => {

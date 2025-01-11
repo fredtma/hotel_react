@@ -1,8 +1,17 @@
 import { Form, InputGroup } from "react-bootstrap";
 import { debounce } from "../../services/debounce/debounce";
 
-export default function HotelSearchHeader({onSearch}) {
-  const searchInputHandler = debounce((e) => { onSearch(e.target.value);}, 500);
+/**
+ * @param {{onSearch: (search: string) => void}} param
+ * @returns {JSX.Element}
+ */
+export default function HotelSearchHeader({ onSearch }) {
+  /**
+   * @type {(e: React.ChangeEvent<HTMLInputElement>) => void}
+   */
+  const searchInputHandler = debounce((e) => {
+    onSearch(e.target.value);
+  }, 500);
   return (
     <div>
       <InputGroup className="mb-3">

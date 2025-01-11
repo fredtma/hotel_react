@@ -59,6 +59,10 @@ export function sendMessage(message, worker) {
   worker.postMessage(message);
 }
 
+/**
+ * @param {Worker} worker
+ * @param {Function} callback
+ */
 export function receiveMessage(worker, callback) {
   worker.addEventListener('message', (e) => {
     callback(e);

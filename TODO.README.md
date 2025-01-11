@@ -1,12 +1,12 @@
 ## TODO
 
 - [ ] Add eslint
-- [ ] Add error boundary
-- [ ] IndexedDB
-- [ ] Workers
+- [x] Add error boundary
+- [x] IndexedDB
+- [x] Workers
 - [ ] Add PWA
 - [ ] Add unit tests
-- [ ] JsDoc type checking
+- [x] JsDoc type checking
 
 ## Milestone
 

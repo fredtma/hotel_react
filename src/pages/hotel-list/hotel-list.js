@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { Badge, Card, ListGroup } from "react-bootstrap";
 import { receiveMessage, sendMessage, setupWorker } from "../../services/web-worker/web-worker";
 
+/**
+ * @type {Worker}
+ */
 let worker = setupWorker();
+
+/**
+ * @param {string} search
+ * @returns {JSX.Element}
+ */
 export default function HotelList({ search = "" }) {
   const [items, setItems] = useState([]);
   useEffect(() => searchItems(search, worker), [search]);
@@ -49,6 +57,10 @@ export default function HotelList({ search = "" }) {
   );
 }
 
+/**
+ * @param {string} search
+ * @param {Worker} w
+ */
 function searchItems(search, w = worker) {
   if (!w?.workerIsSet) return;
   if (search) {
