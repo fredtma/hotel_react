@@ -1,14 +1,28 @@
+import { ListGroup } from "react-bootstrap";
+import { fetchOk } from "../../services/fetch/fetch.service";
+import { useEffect, useState } from "react";
+
 export default function HotelList() {
-  const items = ['China', 'Brazil', 'USA', 'Congo'];
+  const [items, setItems] = useState([]);
+  useEffect(() => getItems(setItems).then(setItems.bind(null)), []);
+
   return (
     <div>
-      <ul className="list-group">
+      <ListGroup>
         {items.map((item, i) => (
-          <li className="list-group-item" key={i}>
-            {item}
-          </li>
+          <ListGroup.Item key={i}>
+            {item.name}
+          </ListGroup.Item>
         ))}
-      </ul>
+      </ListGroup>
     </div>
   );
+
 }
+
+
+function getItems() {
+  return fetch("/assets/data/properties.json")
+    .then(fetchOk)
+    .catch((err) => console.error(err));
+};
